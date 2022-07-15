@@ -88,8 +88,11 @@ pub fn sys_mmap(_start: usize, _len: usize, _port: usize) -> isize {
         return -1;
     }
 
+    // 增加PTE_U
+
     let p = _port as u8;
-    let perm = MapPermission::from_bits(p << 1).unwrap();
+    let mut perm = MapPermission::from_bits(p << 1).unwrap();
+    perm |= MapPermission::U;
 
     let start_va: VirtAddr = VirtAddr::from(_start).floor().into();
     let end_va: VirtAddr = VirtAddr::from(_start + _len).ceil().into();
